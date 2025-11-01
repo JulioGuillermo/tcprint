@@ -12,7 +12,8 @@
 (function () {
   "use strict";
 
-  const BASE_URL = "http://localhost:3000";
+  // const BASE_URL = "http://localhost:3000";
+  const BASE_URL = "https://julioguillermo.github.io/tcprint";
   const SCRIPT_TO_INJECT_URL = `${BASE_URL}/print-logic.js`;
   const STYLE_TO_INJECT_URL = `${BASE_URL}/print-style.css`;
 
