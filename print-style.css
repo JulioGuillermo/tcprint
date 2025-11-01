@@ -1,0 +1,96 @@
+.tag {
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.2rem;
+}
+
+.indicator {
+    width: 0.7rem;
+    height: 0.5rem;
+    border-radius: 0.5rem;
+    margin: 0 0.3rem;
+    display: inline-block;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.days0 {
+    background: #55ffaa;
+}
+.days30 {
+    background: #ffff88;
+}
+.days90 {
+    background: #ffaa88;
+}
+.days120 {
+    background: #ff9888;
+}
+.days300 {
+    background: #ff8888;
+}
+.daysNever {
+    background: #ff88ff;
+}
+
+.rent {
+    background: #ffff88;
+}
+.empty {
+    background: #ffaa88;
+}
+.unknown {
+    background: #ff88ff;
+}
+
+.no-name {
+    background: #ffaa88;
+}
+.incompleted-name {
+    background: #ffff88;
+}
+
+.acquisition-flag {
+    background: #55ffaa;
+}
+.informer-flag {
+    background: #55ffaa;
+}
+
+.friendly {
+    /*background-color: #aaffaa !important;*/
+    color: #008800 !important;
+    font-weight: bold;
+}
+.rude {
+    /*background-color: #ffaaaa !important;*/
+    color: #880000 !important;
+    font-weight: bold;
+}
+
+.wants-to-sell {
+    /*background-color: #ffff88 !important;*/
+    color: #ffaa00 !important;
+    font-weight: bold;
+}
+.no-sale-interest {
+    /*background-color: transparent;*/
+    color: #333333 !important;
+    font-weight: bold;
+}
+
+.informer {
+    /*background-color: #aaffff !important;*/
+    color: #0088ff !important;
+    font-weight: bold;
+}
+.not-informer {
+    /*background-color: transparent;*/
+    color: #333333;
+    font-weight: bold;
+}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important; /* Para navegadores basados en Chromium/WebKit (Chrome, Edge, Safari) */
+        print-color-adjust: exact !important; /* Estándar moderno (Firefox) */
+    }
+}
