@@ -55,6 +55,26 @@
     background: #55ffaa;
 }
 
+.friendly-tag {
+    background: #55ffaa;
+}
+.sell-tag {
+    background: #ffaa88;
+}
+.informer-tag {
+    background: #88ccff;
+}
+
+.good {
+    background: #55ffaa;
+}
+.neutral {
+    background: #cccccc;
+}
+.bad {
+    background: #ff8888;
+}
+
 .friendly {
     /*background-color: #aaffaa !important;*/
     color: #008800 !important;

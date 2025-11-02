@@ -18,98 +18,6 @@ const OwnerLocated = "Propietario localizado";
 const Responsible = "Responsable";
 const Zone = "Zona";
 
-const STRONG_NEGATIONS = ["no", "ni", "sin"];
-
-const friendlyTerms = [
-  "majo",
-  "maja",
-  "amable",
-  "simpático",
-  "agradable",
-  "cercano",
-  "atento",
-  "encantador",
-  "educado",
-  "abierto",
-  "buena gente",
-  "excelente trato",
-  "majete",
-];
-
-const rudeTerms = [
-  "borde",
-  "cortante",
-  "rara",
-  "grosero",
-  "antipático",
-  "tira la puerta",
-  "cerrada",
-  "cerrado",
-  "y cierra",
-  "agresiva",
-  "agresivo",
-  "brusco",
-  "maleducado",
-  "no abre",
-  "no necesita nada",
-];
-
-const sellTerms = [
-  "vender",
-  "venta",
-  "comprar",
-  "compra",
-  "adquirir",
-  "inversión",
-  "alquilar",
-  "encargo",
-  "interés",
-  "se lo plantea",
-  "futuro",
-  "posible venta",
-  "quiere mudarse",
-  "fallecida",
-  "fallecido",
-];
-
-const noSellTerms = [
-  "no vende",
-  "no compra",
-  "no alquila",
-  "no quiere nada",
-  "no quiere vender",
-  "no quiere comprar",
-  "sin interés",
-  "no interesa",
-  "no le interesa",
-  "no se lo plantea",
-  "no tiene intención",
-  "no tiene interes",
-  "descartado",
-];
-
-const informerTerms = [
-  "informador",
-  "informadora",
-  "informa",
-  "ayuda",
-  "fidelizar",
-  "llevarle un detalle",
-  "seguir en contacto",
-  "hacer seguimiento",
-  "habla de vecinos",
-  "da información",
-];
-
-const noInformerTerms = [
-  "no informa",
-  "no ayuda",
-  "nada de vecinos",
-  "no sabe de vecinos",
-  "no me va a ayudar",
-  "no da información",
-];
-
 class Style {
   _tag = false;
   _bold = false;
@@ -190,141 +98,6 @@ function indicator(element) {
   div.classList.add("indicator");
   element.prepend(div);
   return div;
-}
-
-class Highligther {
-  htmlResaltado = "";
-  T = 0;
-  V = 0;
-  I = 0;
-
-  /**
-   * @param {string} className
-   */
-  processClass(className) {
-    if (className === "friendly") this.T++;
-    else if (className === "rude") this.T--;
-    else if (className === "wants-to-sell") this.V++;
-    else if (className === "no-sale-interest") this.V--;
-    else if (className === "informer") this.I++;
-    else if (className === "not-informer") this.I--;
-  }
-
-  /**
-   * @param {string} match
-   * @param {string} text
-   * @returns {string}
-   */
-  processExplicit(match, text) {
-    let className = "";
-    const lowMatch = match.toLowerCase();
-
-    if (rudeTerms.includes(lowMatch)) {
-      className = "rude";
-    } else if (noSellTerms.includes(lowMatch)) {
-      className = "no-sale-interest";
-    } else if (noInformerTerms.includes(lowMatch)) {
-      className = "not-informer";
-    }
-
-    const index = text.toLowerCase().indexOf(lowMatch);
-    const precedingText = text.substring(0, index).trim();
-    const precedingWord = precedingText.split(/\s+/).pop();
-
-    if (
-      precedingWord &&
-      STRONG_NEGATIONS.includes(precedingWord.toLowerCase())
-    ) {
-      return match;
-    }
-
-    this.processClass(className);
-    return `<span class="${className}">${match}</span>`;
-  }
-
-  /**
-   * @param {string} match
-   * @param {string} text
-   * @returns {string}
-   */
-  processPositive(match, text) {
-    const lowMatch = match.toLowerCase();
-
-    let className = "";
-    if (friendlyTerms.includes(lowMatch)) {
-      className = "friendly";
-    } else if (sellTerms.includes(lowMatch)) {
-      className = "wants-to-sell";
-    } else if (informerTerms.includes(lowMatch)) {
-      className = "informer";
-    }
-
-    const matchIndex = text.toLowerCase().indexOf(lowMatch);
-    if (matchIndex === -1) return match;
-
-    const precedingText = text.substring(0, matchIndex).trim();
-    const precedingWords = precedingText
-      .split(/\s+/)
-      .filter((w) => w.length > 0);
-    const lastPrecedingWord = precedingWords.pop();
-
-    const isStronglyNegated = STRONG_NEGATIONS.includes(
-      lastPrecedingWord ? lastPrecedingWord.toLowerCase() : "",
-    );
-
-    if (!isStronglyNegated) {
-      this.processClass(className);
-      return `<span class="${className}">${match}</span>`;
-    }
-
-    if (lastPrecedingWord?.toLowerCase() === "ni") {
-      return match;
-    }
-
-    if (className === "friendly") className = "rude";
-    else if (className === "wants-to-sell") className = "no-sale-interest";
-    else if (className === "informer") className = "not-informer";
-
-    this.processClass(className);
-    return `<span class="${className}">${match}</span>`;
-  }
-
-  /**
-   * @param {string} text
-   * @returns {string}
-   */
-  processText(text) {
-    this.htmlResaltado = text;
-    this.T = 0;
-    this.V = 0;
-    this.I = 0;
-
-    const terminosExplicitos = [
-      ...rudeTerms,
-      ...noSellTerms,
-      ...noInformerTerms,
-    ];
-    const regexExplicito = new RegExp(
-      `\\b(?:${terminosExplicitos.join("|")})\\b`,
-      "gi",
-    );
-
-    this.htmlResaltado = this.htmlResaltado.replace(regexExplicito, (match) => {
-      return this.processExplicit(match, text);
-    });
-
-    const allPositiveTerms = [...friendlyTerms, ...sellTerms, ...informerTerms];
-    const regexPositivo = new RegExp(
-      `\\b(?:${allPositiveTerms.join("|")})\\b`,
-      "gi",
-    );
-
-    this.htmlResaltado = this.htmlResaltado.replace(regexPositivo, (match) => {
-      return this.processPositive(match, text);
-    });
-
-    return this.htmlResaltado;
-  }
 }
 
 class Processor {
@@ -426,16 +199,18 @@ class Processor {
 
   /**
    * @param {string} text
-   * @returns {string}
+   * @returns {Promise<string>}
    */
-  processSumary(text) {
-    return new Highligther().processText(text);
+  async processSumary(text) {
+    if (!globalThis.highligther) return text;
+
+    return await globalThis.highligther.processText(text);
   }
 
   /**
    * @param {HTMLTableRowElement} row
    */
-  processRow(row) {
+  async processRow(row) {
     if (this.daysSinceLastContactCol == -1) return;
     const cols = row.querySelectorAll("td");
 
@@ -494,7 +269,7 @@ class Processor {
     }
 
     if (this.zoneSummaryCol !== -1) {
-      cols[this.zoneSummaryCol].innerHTML = this.processSumary(
+      cols[this.zoneSummaryCol].innerHTML = await this.processSumary(
         cols[this.zoneSummaryCol].textContent ?? "",
       );
     }
@@ -503,27 +278,29 @@ class Processor {
   /**
    * @param {HTMLTableElement} table
    */
-  processTable(table) {
+  async processTable(table) {
     const head = table.querySelector("thead>tr");
     if (!head) return;
 
     this.getCols(head);
 
     const rows = table.querySelectorAll("tbody>tr");
-    rows.forEach((r) => this.processRow(r));
+    for (let r of rows) {
+      await this.processRow(r);
+    }
   }
 }
 
-function processTable() {
+async function processTable() {
   const table = document.querySelector("#contentToPrint>table");
   if (!table) return;
 
   const processor = new Processor();
-  processor.processTable(table);
+  await processor.processTable(table);
 }
 
-window.print = () => {
-  processTable();
+window.print = async () => {
+  await processTable();
   winPrint();
   console.log(document.querySelector("#contentToPrint"));
 };

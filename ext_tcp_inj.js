@@ -14,8 +14,48 @@
 
   // const BASE_URL = "http://localhost:3000";
   const BASE_URL = "https://julioguillermo.github.io/tcprint";
-  const SCRIPT_TO_INJECT_URL = `${BASE_URL}/print-logic.js`;
   const STYLE_TO_INJECT_URL = `${BASE_URL}/print-style.css`;
+  const SCRIPT_TO_INJECT_URL = `${BASE_URL}/print-logic.js`;
+  const SUM_SCRIPT_TO_INJECT_URL = `${BASE_URL}/sum-processor.js`;
+  const SUM_E_SCRIPT_TO_INJECT_URL = `${BASE_URL}/sum-e-processor.js`;
+
+  function injectSumEScript() {
+    if (document.querySelector(`script[src="${SUM_E_SCRIPT_TO_INJECT_URL}"]`))
+      return;
+
+    const tfScript = document.createElement("script");
+    tfScript.src = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs";
+    tfScript.onload = () => {
+      const seScript = document.createElement("script");
+      seScript.src =
+        "https://cdn.jsdelivr.net/npm/@tensorflow-models/universal-sentence-encoder";
+      document.body.appendChild(seScript);
+    };
+    document.body.appendChild(tfScript);
+
+    const cacheBuster = Date.now();
+
+    const script = document.createElement("script");
+    script.src = `${SUM_E_SCRIPT_TO_INJECT_URL}?v=${cacheBuster}`;
+    document.body.appendChild(script);
+    console.log(
+      `[Injector] Summary IA script injected: ${SUM_E_SCRIPT_TO_INJECT_URL}`,
+    );
+  }
+
+  function injectSumScript() {
+    if (document.querySelector(`script[src="${SUM_SCRIPT_TO_INJECT_URL}"]`))
+      return;
+
+    const cacheBuster = Date.now();
+
+    const script = document.createElement("script");
+    script.src = `${SUM_SCRIPT_TO_INJECT_URL}?v=${cacheBuster}`;
+    document.body.appendChild(script);
+    console.log(
+      `[Injector] Summary script injected: ${SUM_SCRIPT_TO_INJECT_URL}`,
+    );
+  }
 
   function injectScript() {
     if (document.querySelector(`script[src="${SCRIPT_TO_INJECT_URL}"]`)) return;
@@ -45,6 +85,8 @@
   }
 
   window.addEventListener("load", () => {
+    // injectSumEScript();
+    injectSumScript();
     injectScript();
     injectStyle();
   });
