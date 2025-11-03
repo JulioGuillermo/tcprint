@@ -321,6 +321,8 @@
         },
       );
 
+      return this.htmlResaltado;
+
       return `
     <span class="friendly-tag tag">T: ${this.T}</span>
     <span class="sell-tag tag">V: ${this.V}</span>
